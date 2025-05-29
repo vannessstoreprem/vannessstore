@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Panel Admin - VANNESS STORE</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f7fa;
+      padding: 2rem;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .product-form {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 0.8rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    button {
+      background-color: #0073e6;
+      color: white;
+      padding: 0.8rem 1.2rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    button:hover {
+      background-color: #005bb5;
+    }
+    #product-list {
+      margin-top: 3rem;
+    }
+    #product-list table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    #product-list th, #product-list td {
+      padding: 1rem;
+      text-align: center;
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Panel Admin - VANNESS STORE</h2>
+
+    <!-- Form untuk menambah produk -->
+    <div class="product-form">
+      <h3>Tambah Produk Baru</h3>
+      <div class="form-group">
+        <label for="name">Nama Produk</label>
+        <input type="text" id="name" placeholder="Masukkan nama produk" />
+      </div>
+      <div class="form-group">
+        <label for="price">Harga</label>
+        <input type="number" id="price" placeholder="Masukkan harga produk" />
+      </div>
+      <div class="form-group">
+        <label for="description">Deskripsi</label>
+        <textarea id="description" placeholder="Masukkan deskripsi produk"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="category">Kategori</label>
+        <select id="category">
+          <option value="app-premium">App Premium</option>
+          <option value="service">Layanan</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="image">URL Gambar</label>
+        <input type="text" id="image" placeholder="Masukkan URL gambar produk" />
+      </div>
+      <button id="add-product-btn">Tambah Produk</button>
+    </div>
+
+    <!-- Daftar Produk -->
+    <div id="product-list">
+      <h3>Daftar Produk</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Nama Produk</th>
+            <th>Harga</th>
+            <th>Kategori</th>
+            <th>Gambar</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="product-table-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    // Fungsi untuk menambah produk
+    document.getElementById('add-product-btn').addEventListener('click', async () => {
+      const name = document.getElementById('name').value;
+      const price = document.getElementById('price').value;
+      const description = document.getElementById('description').value;
+      const category = document.getElementById('category').value;
+      const image = document.getElementById('image').value;
+
+      const response = await fetch('http://localhost:3000/admin/product', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, price, description, category, image })
+      });
+
+      if (response.ok) {
+        alert('Produk berhasil ditambahkan!');
+        loadProducts(); // Refresh daftar produk
+      }
+    });
+
+    // Fungsi untuk memuat produk dari server
+    async function loadProducts() {
+      const response = await fetch('http://localhost:3000/admin/products');
+      const products = await response.json();
+
+      const tableBody = document.getElementById('product-table-body');
+      tableBody.innerHTML = '';
+
+      products.forEach(product => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${product.name}</td>
+          <td>Rp ${product.price}</td>
+          <td>${product.category}</td>
+          <td><img src="${product.image}" alt="${product.name}" width="50" /></td>
+          <td><button onclick="updatePrice('${product._id}')">Update Harga</button></td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+
+    // Fungsi untuk mengupdate harga produk
+    async function updatePrice(productId) {
+      const newPrice = prompt('Masukkan harga baru untuk produk ini:');
+      if (newPrice) {
+        const response = await fetch(`http://localhost:3000/admin/product/${productId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ price: newPrice })
+        });
+
+        if (response.ok) {
+          alert('Harga produk berhasil diperbarui!');
+          loadProducts(); // Refresh daftar produk
+        }
+      }
+    }
+
+    // Muat produk saat halaman dibuka
+    loadProducts();
+  </script>
+</body>
+</html>

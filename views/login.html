@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Login / Register - VANNESS STORE</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f7fa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  .auth-container {
+    background: white;
+    padding: 2rem 3rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    width: 320px;
+  }
+  h2 {
+    text-align: center;
+    color: #0073e6;
+    margin-bottom: 1.5rem;
+  }
+  label {
+    display: block;
+    margin-top: 1rem;
+    font-weight: 600;
+  }
+  input[type="text"], input[type="password"] {
+    width: 100%;
+    padding: 0.6rem 0.8rem;
+    margin-top: 0.3rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    box-sizing: border-box;
+  }
+  button {
+    width: 100%;
+    margin-top: 1.8rem;
+    padding: 0.7rem;
+    background-color: #0073e6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #005bb5;
+  }
+  .toggle-link {
+    margin-top: 1rem;
+    text-align: center;
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: #0073e6;
+    text-decoration: underline;
+    user-select: none;
+  }
+  .error-msg {
+    color: #d32f2f;
+    font-size: 0.9rem;
+    margin-top: 0.8rem;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<div class="auth-container">
+  <h2 id="form-title">Login</h2>
+  
+  <form id="auth-form" method="POST" action="/login">
+    <label for="username">Username</label>
+    <input type="text" id="username" name="username" required autocomplete="username" />
+    
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password" required autocomplete="current-password" />
+    
+    <!-- Register only fields -->
+    <div id="register-fields" style="display:none;">
+      <label for="password2">Konfirmasi Password</label>
+      <input type="password" id="password2" name="password2" autocomplete="new-password" />
+    </div>
+    
+    <button type="submit" id="submit-btn">Login</button>
+  </form>
+
+  <div class="toggle-link" id="toggle-form">Belum punya akun? Register di sini</div>
+
+  <div class="error-msg" id="error-msg"></div>
+</div>
+
+<script>
+  const toggleLink = document.getElementById('toggle-form');
+  const formTitle = document.getElementById('form-title');
+  const authForm = document.getElementById('auth-form');
+  const submitBtn = document.getElementById('submit-btn');
+  const registerFields = document.getElementById('register-fields');
+  const errorMsg = document.getElementById('error-msg');
+
+  let isLogin = true;
+
+  toggleLink.addEventListener('click', () => {
+    isLogin = !isLogin;
+    if (isLogin) {
+      formTitle.textContent = 'Login';
+      submitBtn.textContent = 'Login';
+      authForm.action = '/login';
+      registerFields.style.display = 'none';
+      toggleLink.textContent = 'Belum punya akun? Register di sini';
+      errorMsg.textContent = '';
+    } else {
+      formTitle.textContent = 'Register';
+      submitBtn.textContent = 'Register';
+      authForm.action = '/register';
+      registerFields.style.display = 'block';
+      toggleLink.textContent = 'Sudah punya akun? Login di sini';
+      errorMsg.textContent = '';
+    }
+  });
+
+  // Optional: menangani error lewat query param (kalau server kirim redirect error)
+  window.onload = () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const err = urlParams.get('error');
+    if (err) {
+      errorMsg.textContent = err;
+    }
+  };
+</script>
+
+</body>
+</html>

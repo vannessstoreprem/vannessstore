@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Panel - Tambah Produk</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+    .form-container {
+      max-width: 500px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+    }
+    .form-container h2 {
+      margin-bottom: 20px;
+    }
+    .form-container input, .form-container textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .form-container button {
+      background-color: #007bff;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .form-container button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>Tambah Produk Baru</h2>
+    <form id="addProductForm">
+      <input type="text" id="name" placeholder="Nama Produk" required />
+      <textarea id="description" placeholder="Deskripsi Produk" required></textarea>
+      <input type="number" id="price" placeholder="Harga Produk" required />
+      <input type="text" id="image" placeholder="URL Gambar Produk" />
+      <button type="submit">Tambah Produk</button>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById('addProductForm').addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const name = document.getElementById('name').value;
+      const description = document.getElementById('description').value;
+      const price = document.getElementById('price').value;
+      const image = document.getElementById('image').value;
+
+      const productData = { name, description, price, image };
+
+      try {
+        const response = await fetch('/admin/add-product', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(productData),
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          alert('Produk berhasil ditambahkan!');
+          document.getElementById('addProductForm').reset();
+        } else {
+          alert('Gagal menambahkan produk: ' + data.message);
+        }
+      } catch (error) {
+        alert('Terjadi kesalahan: ' + error.message);
+      }
+    });
+  </script>
+</body>
+</html>

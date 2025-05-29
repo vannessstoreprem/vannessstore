@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Dashboard - VANNESS STORE</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f7fa;
+    color: #222;
+    margin: 0;
+    padding: 2rem 1rem;
+  }
+  .dashboard-container {
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  h2 {
+    color: #0073e6;
+    margin-bottom: 1.5rem;
+  }
+  .cards-wrapper {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+  }
+  .card {
+    background: #fff;
+    padding: 1.5rem 2rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    flex: 1 1 250px;
+    min-width: 250px;
+    text-align: left;
+    color: #0073e6;
+    font-weight: 600;
+    transition: box-shadow 0.3s ease;
+  }
+  .card:hover {
+    box-shadow: 0 12px 30px rgba(0, 115, 230, 0.3);
+  }
+  .card h3 {
+    margin-bottom: 0.8rem;
+    font-weight: 700;
+  }
+  .btn-shop-now {
+    background-color: #0073e6;
+    color: white;
+    border: none;
+    padding: 0.9rem 2rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.15s ease;
+  }
+  .btn-shop-now:hover {
+    background-color: #005bb5;
+    transform: scale(1.05);
+  }
+  .btn-shop-now:active {
+    transform: scale(0.95);
+  }
+</style>
+</head>
+<body>
+
+<div class="dashboard-container">
+  <h2>Selamat Datang di VANNESS STORE Dashboard</h2>
+  
+  <div class="cards-wrapper">
+    <div class="card">
+      <h3>Info Akun</h3>
+      <p>Nama Pengguna: <strong id="username-display">-</strong></p>
+      <p>Email: <strong id="email-display">-</strong></p>
+    </div>
+
+    <div class="card">
+      <h3>Status Akun</h3>
+      <p>Akun aktif dan siap berbelanja.</p>
+    </div>
+
+    <div class="card">
+      <h3>Promo Terbaru</h3>
+      <p>Dapatkan diskon 10% untuk pembelian pertama kamu!</p>
+    </div>
+  </div>
+
+  <button class="btn-shop-now" onclick="window.location.href='index.html'">Belanja Sekarang</button>
+</div>
+
+<script>
+  // Contoh mengambil data user dari localStorage (simulasi)
+  // Asumsikan saat login sudah simpan user info ini, misal:
+  // localStorage.setItem('user', JSON.stringify({ username: 'pepet', email: 'pepet@example.com' }));
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const userData = JSON.parse(localStorage.getItem('user'));
+    if (userData) {
+      document.getElementById('username-display').textContent = userData.username || '-';
+      document.getElementById('email-display').textContent = userData.email || '-';
+    } else {
+      // Jika tidak ada data user, bisa redirect ke login, atau tampil default
+      document.getElementById('username-display').textContent = '-';
+      document.getElementById('email-display').textContent = '-';
+      // Contoh redirect ke login kalau belum login:
+      // window.location.href = 'login.html';
+    }
+  });
+</script>
+
+</body>
+</html>

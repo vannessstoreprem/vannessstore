@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Payment - VANNESS STORE</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f5f7fa;
+      margin: 0;
+      padding: 2rem;
+      display: flex;
+      justify-content: center;
+      color: #333;
+    }
+    .card {
+      background: #ffffff;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      border: 1px solid #ddd;
+    }
+    h2 {
+      margin-top: 0;
+      margin-bottom: 1rem;
+      font-weight: 700;
+      color: #0073e6;
+    }
+    .order-info {
+      text-align: left;
+      margin-bottom: 1.5rem;
+      font-size: 14px;
+      color: #555;
+    }
+    .order-info div {
+      margin-bottom: 8px;
+    }
+    .status {
+      display: inline-flex;
+      align-items: center;
+      font-weight: 600;
+      color: #ff9800;
+    }
+    .status-icon {
+      width: 16px;
+      height: 16px;
+      margin-right: 6px;
+    }
+    .total-payment {
+      font-weight: 700;
+      margin: 1rem 0;
+      font-size: 18px;
+      color: #222;
+    }
+    .qris-container {
+      background: #fff8e1;
+      padding: 10px;
+      border-radius: 12px;
+      display: inline-block;
+      margin-bottom: 1rem;
+    }
+    .qris-container img {
+      max-width: 250px;
+      width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+    .countdown {
+      font-size: 14px;
+      color: #d32f2f;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+    .note {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 1.5rem;
+    }
+    button {
+      background-color: #0073e6;
+      border: none;
+      border-radius: 6px;
+      padding: 12px 25px;
+      font-weight: 700;
+      color: white;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s ease, transform 0.15s ease;
+    }
+    button:hover {
+      background-color: #005bb5;
+    }
+    button:active {
+      transform: scale(0.95);
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>&lt;- Detail Pesanan</h2>
+    <div class="order-info">
+      <div><strong>Order ID:</strong> <span id="orderId">-</span></div>
+      <div><strong>Produk:</strong> <span id="produk">-</span></div>
+      <div><strong>ID Tujuan:</strong> <span id="idTujuan">-</span></div>
+      <div class="status">
+        <svg class="status-icon" fill="#ff9800" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg> Pending
+      </div>
+      <div><strong>Metode Pembayaran:</strong> QRIS (Instan) | Biaya 0.70%</div>
+    </div>
+    <hr />
+    <div>
+      <h3 style="font-weight:700; margin: 1rem 0;">HARAP TRANSFER SESUAI NOMINAL YANG TERTERA</h3>
+      <div class="total-payment" id="totalPembayaran">Rp -</div>
+      <div class="qris-container">
+        <img src="qrispayment.png" alt="QRIS Saweria" />
+      </div>
+      <div class="countdown" id="countdown">Batas Waktu: 05:00</div>
+      <div class="note">Note: Jika sudah mentransfer harap klik Konfirmasi agar pesanan dapat dicek</div>
+      <button id="confirmBtn">Konfirmasi</button>
+    </div>
+  </div>
+
+  <script>
+    // Ambil parameter URL
+    function getQueryParam(param) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(param);
+    }
+
+    // Update data halaman dari parameter URL
+    document.addEventListener('DOMContentLoaded', () => {
+      const orderId = getQueryParam('orderId') || '-';
+      const produk = getQueryParam('produk') || '-';
+      const idTujuan = getQueryParam('idTujuan') || '-';
+      const totalRaw = getQueryParam('total') || '0';
+      const totalNum = Number(totalRaw);
+      // Hitung total dengan biaya 0.7%
+      const totalWithFee = totalNum + totalNum * 0.007;
+
+      document.getElementById('orderId').textContent = orderId;
+      document.getElementById('produk').textContent = produk;
+      document.getElementById('idTujuan').textContent = idTujuan;
+      document.getElementById('totalPembayaran').textContent = `Rp ${totalWithFee.toLocaleString('id-ID', {minimumFractionDigits:0, maximumFractionDigits:0})}`;
+    });
+
+    // Countdown 5 menit
+    let timeLeft = 300; // detik
+    const countdownEl = document.getElementById('countdown');
+
+    function updateCountdown() {
+      let minutes = Math.floor(timeLeft / 60);
+      let seconds = timeLeft % 60;
+      countdownEl.textContent = `Batas Waktu: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      if (timeLeft <= 0) {
+        clearInterval(timer);
+        countdownEl.textContent = 'Waktu pembayaran telah habis.';
+      } else {
+        timeLeft--;
+      }
+    }
+
+    updateCountdown();
+    const timer = setInterval(updateCountdown, 1000);
+
+    // Discord webhook konfirmasi
+    const webhookURL = "https://discord.com/api/webhooks/1377565022519033856/RXrFvem7v7F0WuNsU-ieXuQErKU-sbs7xyh-Mqqyn8t5XWr2XfbnMMVRwcp8orJeLbDs";
+
+    document.getElementById('confirmBtn').addEventListener('click', async () => {
+      const orderId = document.getElementById('orderId').textContent;
+      const produk = document.getElementById('produk').textContent;
+      const idTujuan = document.getElementById('idTujuan').textContent;
+      const totalRaw = getQueryParam('total');
+      const totalNum = Number(totalRaw);
+      const totalWithFee = totalNum + totalNum * 0.007;
+
+      const message = {
+        content: `**Konfirmasi Pembayaran**\n` +
+                 `Order ID: ${orderId}\n` +
+                 `Produk: ${produk}\n` +
+                 `ID Tujuan: ${idTujuan}\n` +
+                 `Status: Konfirmasi diterima oleh user.\n` +
+                 `Total Pembayaran: Rp ${totalWithFee.toLocaleString('id-ID', {minimumFractionDigits:0, maximumFractionDigits:0})}`
+      };
+
+      try {
+        const response = await fetch(webhookURL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(message)
+        });
+
+        if (response.ok) {
+          alert('Konfirmasi berhasil dikirim ke admin. Terima kasih!');
+        } else {
+          alert('Gagal mengirim konfirmasi, coba lagi nanti.');
+        }
+      } catch (error) {
+        alert('Error mengirim konfirmasi: ' + error.message);
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Panel - Daftar Produk</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+    }
+    table, th, td {
+      border: 1px solid #ccc;
+    }
+    th, td {
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background-color: #f0f0f0;
+    }
+  </style>
+</head>
+<body>
+  <h2>Daftar Produk</h2>
+  <table id="productsTable">
+    <thead>
+      <tr>
+        <th>Nama</th>
+        <th>Deskripsi</th>
+        <th>Harga</th>
+        <th>Gambar</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Produk akan ditampilkan di sini -->
+    </tbody>
+  </table>
+
+  <script>
+    async function fetchProducts() {
+      const response = await fetch('/admin/products');
+      const products = await response.json();
+
+      const tableBody = document.getElementById('productsTable').getElementsByTagName('tbody')[0];
+      products.forEach(product => {
+        const row = tableBody.insertRow();
+        row.innerHTML = `
+          <td>${product.name}</td>
+          <td>${product.description}</td>
+          <td>Rp ${product.price.toLocaleString('id-ID')}</td>
+          <td><img src="${product.image}" alt="${product.name}" style="width: 100px;"></td>
+        `;
+      });
+    }
+
+    fetchProducts();
+  </script>
+</body>
+</html>

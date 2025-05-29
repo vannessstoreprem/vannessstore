@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Kontak - VANNESS STORE</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f7fa;
+    color: #222;
+    padding: 2rem;
+    max-width: 900px;
+    margin: auto;
+  }
+  h1 {
+    text-align: center;
+    color: #0073e6;
+    margin-bottom: 2rem;
+  }
+  nav {
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  nav a {
+    margin: 0 1rem;
+    font-weight: 600;
+    color: #0073e6;
+    text-decoration: none;
+  }
+  nav a:hover {
+    text-decoration: underline;
+  }
+  form {
+    background: white;
+    padding: 2rem 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  }
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+  }
+  input, textarea {
+    width: 100%;
+    padding: 0.6rem 1rem;
+    margin-bottom: 1.2rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    font-family: inherit;
+  }
+  textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+  button {
+    background-color: #0073e6;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.8rem;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.15s ease;
+  }
+  button:hover {
+    background-color: #005bb5;
+    transform: scale(1.05);
+  }
+  button:active {
+    transform: scale(0.95);
+  }
+  .contact-info {
+    margin-top: 2rem;
+    font-size: 1rem;
+    color: #444;
+  }
+  .contact-info p {
+    margin-bottom: 0.5rem;
+  }
+  .contact-info a {
+    color: #0073e6;
+    text-decoration: none;
+  }
+  .contact-info a:hover {
+    text-decoration: underline;
+  }
+  @media (max-width: 600px) {
+    body {
+      padding: 1rem;
+    }
+    form {
+      padding: 1.5rem 1.8rem;
+    }
+  }
+</style>
+</head>
+<body>
+  <nav>
+    <a href="index.html">Beranda</a> |
+    <a href="faq.html">FAQ</a> |
+    <a href="contact.html">Kontak</a>
+  </nav>
+
+  <h1>Kontak Kami</h1>
+
+  <form id="contactForm" onsubmit="return handleSubmit(event)">
+    <label for="name">Nama Lengkap</label>
+    <input type="text" id="name" name="name" placeholder="Nama Anda" required />
+
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" placeholder="email@contoh.com" required />
+
+    <label for="message">Pesan</label>
+    <textarea id="message" name="message" placeholder="Tulis pesan Anda di sini..." required></textarea>
+
+    <button type="submit">Kirim Pesan</button>
+  </form>
+
+  <div class="contact-info">
+    <p>Atau hubungi kami langsung via:</p>
+    <p>WhatsApp: <a href="https://wa.me/628999991950" target="_blank" rel="noopener">0899-999-1950</a></p>
+    <p>Email: <a href="mailto:info@vannessstore.com">info@vannessstore.com</a></p>
+  </div>
+
+  <script>
+    function handleSubmit(event) {
+      event.preventDefault();
+      const name = event.target.name.value.trim();
+      const email = event.target.email.value.trim();
+      const message = event.target.message.value.trim();
+
+      if (!name || !email || !message) {
+        alert('Mohon lengkapi semua field.');
+        return false;
+      }
+
+      // Simulasi pengiriman pesan (bisa dikembangkan ke API/backend)
+      alert('Terima kasih, pesan Anda telah terkirim!');
+
+      // Reset form setelah submit
+      event.target.reset();
+
+      return false;
+    }
+  </script>
+</body>
+</html>

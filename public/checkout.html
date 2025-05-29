@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="id">
+<head><meta charset="UTF-8" /><title>Checkout</title></head>
+<body>
+  <h1>Checkout</h1>
+  <p>Produk: YouTube Premium</p>
+  <p>Harga: Rp 50.000</p>
+  <label>Masukkan ID Tujuan (WA):</label><br/>
+  <input id="idTujuan" placeholder="08123456789"/><br/><br/>
+  <button id="btnBayar">Bayar</button>
+  <script>
+    document.getElementById('btnBayar').onclick = function() {
+      const tujuan = document.getElementById('idTujuan').value.trim();
+      if (!tujuan) { alert('Isi nomor WA dulu ya!'); return; }
+      localStorage.setItem('payment_produk', 'YouTube Premium');
+      localStorage.setItem('payment_idtujuan', tujuan);
+      localStorage.setItem('payment_totalharga', 50000);
+      localStorage.setItem('payment_status', 'Pending');
+      window.location.href = 'payment.html';
+    };
+  </script>
+</body>
+</html>
